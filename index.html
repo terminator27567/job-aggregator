@@ -7,11 +7,18 @@
   <meta name="description" content="Empleo Rápido — Ofertas claras, salario visible y feedback en 72h." />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .glass { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); backdrop-filter: blur(4px); }
+    body { opacity: 0; transition: opacity 1s ease-in-out; }
+    body.loaded { opacity: 1; }
+    .glass { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); backdrop-filter: blur(6px); }
     .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .hover-glow:hover { box-shadow: 0 0 12px rgba(255,255,255,0.3); transform: scale(1.02); transition: all 0.3s ease; }
+    input { background-color: #1f2937; color: white; border-radius: 0.75rem; padding: 0.75rem; }
+    button { transition: all 0.3s ease; }
+    button:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    footer { background: linear-gradient(to right, #111827, #1f2937); }
   </style>
 </head>
-<body class="bg-gray-900 text-white antialiased min-h-screen">
+<body class="bg-gray-900 text-white antialiased min-h-screen flex flex-col">
 
   <!-- HERO -->
   <header class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
@@ -21,153 +28,143 @@
       <p class="mt-2 text-sm text-white/80">Ofertas claras · Salario visible · Feedback rápido</p>
 
       <!-- Search -->
-      <form id="searchForm" class="mt-6 flex gap-2 justify-center">
-        <input id="q" class="w-2/3 md:w-1/2 p-3 rounded-l-xl bg-gray-800 placeholder-gray-400" placeholder="Puesto o habilidad — Ej: Ventas, Remoto" />
-        <input id="loc" class="w-1/4 hidden md:block p-3 bg-gray-800 placeholder-gray-400" placeholder='Ubicación — Ej: Ciudad, "Remoto"' />
-        <button class="bg-yellow-400 text-gray-900 px-4 rounded-r-xl font-bold">BUSCAR</button>
+      <form id="searchForm" class="mt-6 flex flex-wrap justify-center gap-2">
+        <input id="q" class="w-2/3 md:w-1/2 p-3 rounded-l-full bg-gray-800 placeholder-gray-400" placeholder="Puesto o habilidad — Ej: Ventas, Remoto" />
+        <button class="bg-yellow-400 text-gray-900 px-6 py-3 rounded-r-full font-bold">BUSCAR</button>
       </form>
     </div>
   </header>
 
   <!-- METRICS -->
-  <section class="max-w-5xl mx-auto px-6 py-8 grid gap-4 sm:grid-cols-3">
-    <div class="bg-gray-800 p-6 rounded-xl text-center glass">
+  <section class="max-w-5xl mx-auto px-6 py-8 grid gap-4 sm:grid-cols-3 fade">
+    <div class="bg-gray-800 p-6 rounded-xl text-center glass hover-glow">
       <div class="text-2xl font-extrabold">95%</div>
       <div class="text-sm text-white/70 mt-1">Feedback en 72h</div>
     </div>
-    <div class="bg-gray-800 p-6 rounded-xl text-center glass">
+    <div class="bg-gray-800 p-6 rounded-xl text-center glass hover-glow">
       <div class="text-2xl font-extrabold">+15.000</div>
       <div class="text-sm text-white/70 mt-1">Ofertas con salario visible</div>
     </div>
-    <div class="bg-gray-800 p-6 rounded-xl text-center glass">
+    <div class="bg-gray-800 p-6 rounded-xl text-center glass hover-glow">
       <div class="text-2xl font-extrabold">20 días</div>
       <div class="text-sm text-white/70 mt-1">Promedio a primera entrevista</div>
     </div>
   </section>
 
-  <!-- CATEGORIES -->
-  <section class="max-w-5xl mx-auto px-6 py-6">
-    <h2 class="text-xl font-bold text-white/90 mb-4">Búsquedas rápidas</h2>
-    <div class="flex flex-wrap gap-3">
-      <button class="chip bg-indigo-600 px-4 py-2 rounded-full">Remoto</button>
-      <button class="chip bg-indigo-600 px-4 py-2 rounded-full">Part-Time</button>
-      <button class="chip bg-indigo-600 px-4 py-2 rounded-full">Sin experiencia</button>
-      <button class="chip bg-indigo-600 px-4 py-2 rounded-full">Ventas</button>
-      <button class="chip bg-indigo-600 px-4 py-2 rounded-full">Logística</button>
-      <button class="chip bg-indigo-600 px-4 py-2 rounded-full">Atención al cliente</button>
-    </div>
-  </section>
-
   <!-- JOBS GRID -->
-  <main class="max-w-5xl mx-auto px-6 py-6">
+  <main class="max-w-5xl mx-auto px-6 py-6 flex-1 fade">
     <h3 class="text-lg font-bold text-white/90 mb-4">Ofertas destacadas</h3>
-    <div id="jobsGrid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <!-- JS injecta aquí -->
-    </div>
+    <div id="jobsGrid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
     <div class="text-center mt-6">
       <button id="loadMore" class="bg-yellow-400 text-gray-900 px-6 py-2 rounded-xl font-bold">Ver más</button>
     </div>
   </main>
 
-  <!-- WHY CHOOSE US -->
-  <section class="max-w-5xl mx-auto px-6 py-8 grid gap-4 sm:grid-cols-3">
-    <div class="bg-gray-800 p-6 rounded-xl glass text-center">
-      <div class="text-lg font-bold text-yellow-400">Sin agujeros negros</div>
-      <p class="text-sm text-white/70 mt-2">Siempre sabrás el estado de tu postulación en 72h.</p>
-    </div>
-    <div class="bg-gray-800 p-6 rounded-xl glass text-center">
-      <div class="text-lg font-bold text-yellow-400">Transparencia salarial</div>
-      <p class="text-sm text-white/70 mt-2">Todas las ofertas muestran rango salarial.</p>
-    </div>
-    <div class="bg-gray-800 p-6 rounded-xl glass text-center">
-      <div class="text-lg font-bold text-yellow-400">Aplicación rápida</div>
-      <p class="text-sm text-white/70 mt-2">Proceso sencillo para que apliques en segundos.</p>
-    </div>
+  <!-- SUBSCRIPTION -->
+  <section class="max-w-3xl mx-auto px-6 py-10 text-center glass rounded-2xl fade">
+    <h3 class="text-2xl font-bold mb-4">📬 Recibe oportunidades y tips exclusivos</h3>
+    <p class="text-white/70 mb-6 text-sm">Suscríbete para recibir alertas laborales, consejos de empleabilidad y noticias del mercado.</p>
+    <form id="subscribeForm" class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
+      <input type="text" name="nombre" placeholder="Tu nombre" required class="flex-1 p-3 rounded-xl bg-gray-800 placeholder-gray-400" />
+      <input type="email" name="email" placeholder="Tu correo" required class="flex-1 p-3 rounded-xl bg-gray-800 placeholder-gray-400" />
+      <input type="text" name="pais" placeholder="Tu país" required class="flex-1 p-3 rounded-xl bg-gray-800 placeholder-gray-400" />
+      <button class="bg-yellow-400 text-gray-900 font-bold px-6 py-3 rounded-xl">Suscribirme</button>
+    </form>
+    <p id="subscribeMsg" class="mt-3 text-sm text-green-400 hidden">✅ ¡Gracias por suscribirte!</p>
   </section>
 
   <!-- FOOTER -->
-  <footer class="max-w-5xl mx-auto px-6 py-6 text-center text-white/60">
-    © <strong>Empleo Rápido</strong> · Conectando talento y oportunidades
+  <footer class="mt-auto py-6 text-center text-white/70 text-sm">
+    <p>© 2025 <strong>Empleo Rápido</strong> · Conectando talento y oportunidades</p>
+    <p class="text-xs text-white/40 mt-1">Hecho con 💼 desde Latinoamérica</p>
   </footer>
 
-  <!-- SCRIPTS: dummy jobs + filtros -->
+  <!-- SCRIPT -->
   <script>
-    const DUMMY_JOBS = Array.from({length:36}).map((_,i) => ({
-      id:i+1,
-      title:`Puesto de ejemplo ${i+1}`,
-      company:`Empresa ${i+1}`,
-      location: i%2===0 ? "Remoto" : "Ciudad X",
-      salary:"$500 - $800",
-      tags: i%2===0 ? ["Remoto","Ventas"] : ["Logística"],
-      desc:"Descripción breve de la oferta laboral para mostrar detalles atractivos al candidato."
-    }));
-
+    const APP_ID = "8a1b403f";
+    const APP_KEY = "b439916140bc95a6f83cf4015bb99b78";
     const jobsGrid = document.getElementById('jobsGrid');
     const loadMoreBtn = document.getElementById('loadMore');
+    let jobs = [];
     let visibleCount = 12;
+    let country = "mx";
 
-    function createCard(job){
-      const wrap = document.createElement('div');
-      wrap.className = 'bg-gray-800 p-4 rounded-xl glass';
-      wrap.innerHTML = `
-        <div class="flex justify-between items-start">
-          <div>
-            <h4 class="font-bold">${job.title}</h4>
-            <div class="text-xs text-white/70 mt-1">${job.company} · ${job.location}</div>
+    async function detectCountry() {
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+        const detected = (data.country_code || "mx").toLowerCase();
+        const supported = ["mx","es","co","cl","ar","br","us"];
+        country = supported.includes(detected) ? detected : "mx";
+      } catch { country = "mx"; }
+    }
+
+    async function fetchJobs(query = "remoto") {
+      const url = `https://api.adzuna.com/v1/api/jobs/${country}/search/1?app_id=${APP_ID}&app_key=${APP_KEY}&results_per_page=30&what=${encodeURIComponent(query)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      jobs = data.results || [];
+      visibleCount = 12;
+      render();
+    }
+
+    function render() {
+      jobsGrid.innerHTML = jobs.length ? "" : "<p class='text-white/60'>No se encontraron resultados.</p>";
+      jobs.slice(0, visibleCount).forEach(job => {
+        const wrap = document.createElement('div');
+        wrap.className = 'bg-gray-800 p-4 rounded-xl glass hover-glow transition-all';
+        wrap.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="font-bold">${job.title}</h4>
+              <div class="text-xs text-white/70 mt-1">${job.company.display_name || "Empresa confidencial"} · ${job.location.display_name || ""}</div>
+            </div>
+            <div class="text-sm text-yellow-400 font-semibold">${job.salary_min ? "$" + job.salary_min.toLocaleString() : "Salario no especificado"}</div>
           </div>
-          <div class="text-sm text-yellow-400 font-semibold">${job.salary}</div>
-        </div>
-        <p class="mt-3 text-sm text-white/75 line-clamp-3">${job.desc}</p>
-        <div class="mt-4 flex justify-between items-center">
-          <a href="#" class="bg-indigo-600 px-3 py-2 rounded-lg text-sm font-medium">Ver oferta</a>
-          <div class="text-xs text-white/60">${job.tags.join(' • ')}</div>
-        </div>
-      `;
-      return wrap;
+          <p class="mt-3 text-sm text-white/75 line-clamp-3">${job.description?.substring(0, 160) || ""}...</p>
+          <div class="mt-4 flex justify-between items-center">
+            <a href="${job.redirect_url}" target="_blank" class="bg-indigo-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">Ver oferta</a>
+            <div class="text-xs text-white/60">${job.category?.label || ""}</div>
+          </div>
+        `;
+        jobsGrid.appendChild(wrap);
+      });
+      loadMoreBtn.style.display = visibleCount >= jobs.length ? 'none' : 'inline-block';
     }
 
-    function render(list){
-      jobsGrid.innerHTML = '';
-      list.slice(0,visibleCount).forEach(j => jobsGrid.appendChild(createCard(j)));
-      loadMoreBtn.style.display = visibleCount >= list.length ? 'none' : 'inline-block';
-    }
-
-    render(DUMMY_JOBS);
-
-    loadMoreBtn.addEventListener('click', ()=>{
+    loadMoreBtn.addEventListener('click', () => {
       visibleCount += 12;
-      render(DUMMY_JOBS);
+      render();
     });
 
-    // Search form
     document.getElementById('searchForm').addEventListener('submit', e => {
       e.preventDefault();
-      const q = (document.getElementById('q').value||'').trim().toLowerCase();
-      const loc = (document.getElementById('loc').value||'').trim().toLowerCase();
-      const filtered = DUMMY_JOBS.filter(j => {
-        const text = (j.title + ' ' + j.company + ' ' + j.desc + ' ' + j.tags.join(' ')).toLowerCase();
-        const matchQ = !q || text.includes(q);
-        const matchLoc = !loc || j.location.toLowerCase().includes(loc) || (loc === 'remoto' && j.location.toLowerCase().includes('remoto'));
-        return matchQ && matchLoc;
-      });
-      visibleCount = 12;
-      render(filtered.length ? filtered : []);
-      if(filtered.length) window.scrollTo({top: 380, behavior:'smooth'});
+      const q = document.getElementById('q').value;
+      fetchJobs(q);
     });
 
-    // Chips filter
-    document.querySelectorAll('.chip').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const t = btn.textContent.trim().toLowerCase();
-        const filtered = DUMMY_JOBS.filter(j => j.tags.join(' ').toLowerCase().includes(t) || j.title.toLowerCase().includes(t));
-        visibleCount = 12;
-        render(filtered.length ? filtered : DUMMY_JOBS);
-        btn.classList.add('ring-2','ring-white/20');
-        setTimeout(()=> btn.classList.remove('ring-2','ring-white/20'), 900);
-      });
+    // ✅ Google Sheets Integration
+    const scriptURL = "https://script.google.com/macros/s/AKfycby5fApjKRleyX40Hdd6NUBFdeosrAyONrWootYDE5JHV5sT0V1TWLJAgorTwZpmoz1d/exec";
+    const subscribeForm = document.getElementById("subscribeForm");
+    const subscribeMsg = document.getElementById("subscribeMsg");
+    subscribeForm.addEventListener("submit", e => {
+      e.preventDefault();
+      fetch(scriptURL, { method: "POST", body: new FormData(subscribeForm) })
+        .then(() => {
+          subscribeMsg.classList.remove("hidden");
+          subscribeForm.reset();
+        })
+        .catch(err => alert("Error: " + err.message));
     });
+
+    (async () => {
+      document.body.classList.add("loaded");
+      await detectCountry();
+      fetchJobs("remoto");
+    })();
   </script>
 </body>
 </html>
+
 
 
